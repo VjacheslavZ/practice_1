@@ -3,15 +3,15 @@
   "version": "1.0.0",
   "description": "A Node.js and TypeScript template project",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/func.ts",
+    "dev": "node --watch func.ts",
     "build": "tsc",
-    "test": "jest"
+    "test": "node --test func.test.ts",
+    "test:watch": "node --watch --test func.test.ts"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
-    "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.3.3"
   }
 }
