@@ -3,14 +3,14 @@
 const { describe, test } = require('node:test');
 const assert = require('node:assert');
 
-const { Tale, config } = require('./oop.js');
+const { Table, config } = require('./index.ts');
 
 const MOCK_DATA = `city,population,area,density,country
     Shanghai,24256800,6340,3826,China
     New York City,8537673,784,10892,United States`;
 
 describe('oop.js', () => {
-    const table = new Tale(MOCK_DATA, config);
+    const table = new Table(MOCK_DATA, config);
     test('Inti table', () => {
         assert.deepEqual(table.data, [
             [ '    Shanghai', '24256800', '6340', '3826', 'China' ],

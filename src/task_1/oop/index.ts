@@ -1,21 +1,34 @@
 'use strict';
 
-const MOCK_DATA = `city,population,area,density,country
-    Shanghai,24256800,6340,3826,China
-    Delhi,16787941,1484,11313,India
-    Lagos,16060303,1171,13712,Nigeria
-    Istanbul,14160467,5461,2593,Turkey
-    Tokyo,13513734,2191,6168,Japan
-    Sao Paulo,12038175,1521,7914,Brazil
-    Mexico City,8874724,1486,5974,Mexico
-    London,8673713,1572,5431,United Kingdom
-    New York City,8537673,784,10892,United States
-    Bangkok,8280925,1569,5279,Thailand`;
+// const MOCK_DATA = `city,population,area,density,country
+//     Shanghai,24256800,6340,3826,China
+//     Delhi,16787941,1484,11313,India
+//     Lagos,16060303,1171,13712,Nigeria
+//     Istanbul,14160467,5461,2593,Turkey
+//     Tokyo,13513734,2191,6168,Japan
+//     Sao Paulo,12038175,1521,7914,Brazil
+//     Mexico City,8874724,1486,5974,Mexico
+//     London,8673713,1572,5431,United Kingdom
+//     New York City,8537673,784,10892,United States
+//     Bangkok,8280925,1569,5279,Thailand`;
 
-class Tale {
+interface Config {
+    populationColumnIndex: number;
+    areaColumnIndex: number;
+    densityColumnIndex: number;
+    countryColumnIndex: number;
+    interestColumnIndex: number;
+    columnsPadsPositions: ('start' | 'end')[];
+  }
+
+import { MOCK_DATA } from '../mockData';
+
+class Table {
     maxDensity = 0;
+    data: string[][];
+    config: Config;
 
-    constructor(data, config) {
+    constructor(data: string, config: Config) {
         const lines = data.split('\n').map(line => line.split(','));
         lines.shift()
 
@@ -41,7 +54,7 @@ class Tale {
     }
 
     sortByInterest() {
-        this.data.sort((a, b) => b[this.config.interestColumnIndex] - a[this.config.interestColumnIndex]);
+        this.data.sort((a, b) => Number(b[this.config.interestColumnIndex]) - Number(a[this.config.interestColumnIndex]));
         return this;
     }
 
@@ -54,7 +67,7 @@ class Tale {
 
     addPadding() {
         const columns = this.data[0].length;
-        const longestByColumn = [];
+        const longestByColumn: number[] = [];
     
         for (let col = 0; col < columns; col++) {
             let longestValue = this.data[0][col];
@@ -83,7 +96,7 @@ class Tale {
     };
 }
 
-const config = {
+const config: Config = {
     populationColumnIndex: 1,
     areaColumnIndex: 2,
     densityColumnIndex: 3,
@@ -92,13 +105,13 @@ const config = {
     columnsPadsPositions: ['end', 'start', 'start', 'start', 'start', 'start'],
 };
 
-new Tale(MOCK_DATA, config).getMaxDensity()
+new Table(MOCK_DATA, config).getMaxDensity()
     .addDensityInterest()
     .sortByInterest()
     .addPadding()
     .print();
 
 module.exports = {
-    Tale,
+    Table,
     config,
 }
