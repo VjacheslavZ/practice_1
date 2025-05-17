@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "A Node.js and TypeScript template project",
   "scripts": {
-    "dev": "node --watch func.ts",
+    "dev_procedural": "node --watch ./src/proc/procedural.ts",
+    "test_procedural": "node --test ./src/proc/procedural.test.js",
     "build": "tsc",
-    "test": "node --test func.test.ts",
+    
     "test:watch": "node --watch --test func.test.ts"
   },
   "devDependencies": {

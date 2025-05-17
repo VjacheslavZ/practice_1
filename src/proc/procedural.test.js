@@ -10,7 +10,7 @@ const {
     addPadding,
     printTable,
     config,
-} = require('./mixed.js');
+} = require('./procedural.ts');
 
 const MOCK_DATA = `city,population,area,density,country
     Shanghai,24256800,6340,3826,China
