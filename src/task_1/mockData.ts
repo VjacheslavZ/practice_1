@@ -10,4 +10,4 @@ export const MOCK_DATA = `city,population,area,density,country
     New York City,8537673,784,10892,United States
     Bangkok,8280925,1569,5279,Thailand`;
 
-export const MOCK_DATA_2 = MOCK_DATA.repeat(10000); 
+export const MOCK_DATA_2 = MOCK_DATA.repeat(10000);

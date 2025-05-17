@@ -6,12 +6,16 @@
     "dev_procedural": "ts-node-dev --respawn ./src/task_1/proc/",
     "test_procedural": "ts-node-dev --respawn ./src/task_1/proc/index.test.js",
     "dev_oop": "ts-node-dev --respawn ./src/task_1/oop/",
-    "test_oop": "ts-node-dev --respawn ./src/task_1/oop/index.test.js"
+    "test_oop": "ts-node-dev --respawn ./src/task_1/oop/index.test.js",
+    "format": "prettier --write \"src/**/*.{js,ts,json}\""
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "prettier": "^3.2.5",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3"
   }
 }
