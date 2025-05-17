@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "A Node.js and TypeScript template project",
   "scripts": {
-    "dev_procedural": "ts-node-dev --respawn ./src/proc/",
-    "test_procedural": "ts-node-dev --respawn ./src/proc/index.test.js"
+    "dev_procedural": "ts-node-dev --respawn ./src/task_1/proc/",
+    "test_procedural": "ts-node-dev --respawn ./src/task_1/proc/index.test.js",
+    "dev_oop": "ts-node-dev --respawn ./src/task_1/oop/",
+    "test_oop": "ts-node-dev --respawn ./src/task_1/oop/index.test.js"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
