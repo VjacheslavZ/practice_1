@@ -3,11 +3,8 @@
   "version": "1.0.0",
   "description": "A Node.js and TypeScript template project",
   "scripts": {
-    "dev_procedural": "node --watch ./src/proc/procedural.ts",
-    "test_procedural": "node --test ./src/proc/procedural.test.js",
-    "build": "tsc",
-    
-    "test:watch": "node --watch --test func.test.ts"
+    "dev_procedural": "ts-node-dev --respawn ./src/proc/",
+    "test_procedural": "ts-node-dev --respawn ./src/proc/index.test.js"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",

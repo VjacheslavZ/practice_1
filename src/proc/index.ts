@@ -1,5 +1,4 @@
 'use strict';
-
 // Tasks for rewriting:
 //   - Watch week 1 lectures about SoC, SRP, code characteristics, V8
 //   - Apply optimizations of computing resources: processor, memory
@@ -12,6 +11,15 @@
 // Additional tasks:
 //   - Try to implement in multiple paradigms: OOP, FP, procedural, mixed
 //   - Prepare load testing and trace V8 deopts
+
+interface Config {
+    populationColumnIndex: number;
+    areaColumnIndex: number;
+    densityColumnIndex: number;
+    countryColumnIndex: number;
+    interestColumnIndex: number;
+    columnsPadsPositions: ('start' | 'end')[];
+  }
 
 const MOCK_DATA = `city,population,area,density,country
     Shanghai,24256800,6340,3826,China
@@ -37,16 +45,23 @@ const MOCK_DATA_2 = `
     New York City,8537673,784,10892,United States
     Bangkok,8280925,1569,5279,Thailand`.repeat(10000);
 
-const convertData = (data) => {
+type TConvertData = (data: string) => string[][];
+const convertData: TConvertData = (data) => {
     const lines = data.split('\n');
     const rows = lines.map((line) => line.trim().split(','));
     return rows;
 };
 
-const getMaxDensity = (data, densityColumnIndex) =>
+type TGetMaxDensity = (data: string[][], densityColumnIndex: number) => number;
+const getMaxDensity: TGetMaxDensity = (data, densityColumnIndex) =>
     Math.max(...data.map((row) => parseFloat(row[densityColumnIndex])));
 
-const addDensityInterest = (data, maxDensity, densityColumnIndex) =>
+type TAddDensityInterest = (
+    data: string[][],
+    maxDensity: number,
+    densityColumnIndex: number
+  ) => string[][];
+const addDensityInterest: TAddDensityInterest = (data, maxDensity, densityColumnIndex) =>
     data.map((row) => {
         const density = parseFloat(row[densityColumnIndex]);
         const interest = Math.round((density * 100) / maxDensity).toString();
@@ -54,16 +69,10 @@ const addDensityInterest = (data, maxDensity, densityColumnIndex) =>
     });
 
 
-/*
-// TODO: investigate
-[bailout (kind: deopt-eager, reason: Insufficient type feedback for generic named access): begin. 
-deoptimizing 0x2bfd487dc2b9 <JSFunction addPadding (sfi = 0x3f9c26dffdb9)>, 0x0e5144713001 <Code TURBOFAN>,
- opt id 4, bytecode offset 86, deopt exit 21, FP to SP delta 192, caller SP 0x00016f7d0ec8, pc 0x000107acf2b8]
-*/
-const test = ['end', 'start', 'start', 'start', 'start', 'start']
-const addPadding = (data, config) => {
+type TAddPadding = (data: string[][], config: Config) => string[][];
+const addPadding: TAddPadding = (data, config) => {
     const columns = data[0].length;
-    const longestByColumn = [];
+    const longestByColumn: number[] = [];
 
     for (let col = 0; col < columns; col++) {
         let longestValue = data[0][col];
@@ -89,25 +98,29 @@ const addPadding = (data, config) => {
     }));
 };
 
-const printTable = (data) => {
+type TPrintTable = (data: string[][]) => void;
+const printTable: TPrintTable = (data) => {
     data.forEach((row) => {
         console.log(row.join(' '));
     });
 };
 
-const main = (payload, config) => {
+type TMain = (payload: string, config: Config) => void;
+const main: TMain = (payload, config) => {
     const { densityColumnIndex, interestColumnIndex } = config;
-    const data = convertData(payload, config);
+
+    const data = convertData(payload);
     data.shift();
+
     const maxDensity = getMaxDensity(data, densityColumnIndex);
     const withDensityInterest = addDensityInterest(data, maxDensity, densityColumnIndex);
     const sorted = withDensityInterest
-        .sort((a, b) => b[interestColumnIndex] - a[interestColumnIndex]);
+        .sort((a, b) => Number(b[interestColumnIndex]) - Number(a[interestColumnIndex]));
     const withPadding = addPadding(sorted, config);
     printTable(withPadding);
 };
 
-const config = {
+const config: Config = {
     populationColumnIndex: 1,
     areaColumnIndex: 2,
     densityColumnIndex: 3,
@@ -116,7 +129,7 @@ const config = {
     columnsPadsPositions: ['end', 'start', 'start', 'start', 'start', 'start'],
 };
 
-main(MOCK_DATA + MOCK_DATA_2, config);
+main(MOCK_DATA, config);
 
 module.exports = {
     convertData,

@@ -10,7 +10,7 @@ const {
     addPadding,
     printTable,
     config,
-} = require('./procedural.ts');
+} = require('./index.ts');
 
 const MOCK_DATA = `city,population,area,density,country
     Shanghai,24256800,6340,3826,China
@@ -56,7 +56,7 @@ describe('proc.js', () => {
         test('printTable', () => {
             const withPadding = addPadding(data, config);
             printTable(withPadding);
-    
+
             const { log } = console;
             let logOutput = '';
             console.log = (msg) => {
