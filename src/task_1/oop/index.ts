@@ -1,12 +1,12 @@
 'use strict';
 
+import { IConfig, config } from '../config';
+import { MOCK_DATA } from '../mockData';
 import { TableBuilder } from './TableBuilder';
 import {
   TableBuilderDirector,
   TablePrinterDirector,
 } from './TableBuilderDirector';
-import { IConfig, config } from '../config';
-import { MOCK_DATA } from '../mockData';
 
 export class Table {
   maxDensity = 0;

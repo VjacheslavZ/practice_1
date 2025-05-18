@@ -1,6 +1,6 @@
+import { config, IConfig } from '../config';
 import { MOCK_DATA } from '../mockData';
 import { Table } from './index';
-import { config, IConfig } from '../config';
 
 class AbstractTableBuilder {
   constructor() {
