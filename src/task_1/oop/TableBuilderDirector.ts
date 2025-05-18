@@ -8,8 +8,6 @@ export class TableBuilderDirector {
   }
 
   createInstance() {
-    this.builder.createInstance();
-
     this.builder.findMaxDensity();
     this.builder.addDensityInterest();
     this.builder.sortByInterest();

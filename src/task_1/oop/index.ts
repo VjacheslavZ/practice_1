@@ -23,13 +23,12 @@ export class Table {
 }
 
 // Usage
-const builder = new TableBuilder(MOCK_DATA, config);
-const director = new TableBuilderDirector(builder);
-director.createInstance();
+const table = new TableBuilder(MOCK_DATA, config);
+new TableBuilderDirector(table).createInstance();
 
-const printer = new TablePrinterDirector(builder);
-printer.printWithPadding();
+const tablePrinter = new TablePrinterDirector(table);
+tablePrinter.printWithPadding();
 console.log('----');
-printer.printWithoutPadding();
+tablePrinter.printWithoutPadding();
 
 module.exports = { Table, config };

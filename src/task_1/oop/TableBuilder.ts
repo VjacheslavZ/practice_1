@@ -11,10 +11,6 @@ class AbstractTableBuilder {
     }
   }
 
-  createInstance() {
-    throw new Error('Method createInstance should be implemented');
-  }
-
   getInstance() {
     throw new Error('Method getInstance should be implemented');
   }
@@ -45,12 +41,7 @@ export class TableBuilder extends AbstractTableBuilder {
 
   constructor(data: string, config: IConfig) {
     super();
-
     this.instance = new Table(data, config);
-  }
-
-  createInstance() {
-    this.instance = new Table(MOCK_DATA, config);
   }
 
   getInstance() {
