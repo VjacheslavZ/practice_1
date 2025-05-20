@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "A Node.js and TypeScript template project",
   "scripts": {
-    "dev_procedural": "ts-node-dev --respawn ./src/task_1/proc/",
-    "test_procedural": "ts-node-dev --respawn ./src/task_1/proc/index.test.js",
-    "dev_oop": "ts-node-dev --respawn ./src/task_1/oop/",
-    "test_oop": "ts-node-dev --respawn ./src/task_1/oop/index.test.js",
+    "t1_dev_procedural": "ts-node-dev --respawn ./src/task_1/proc/",
+    "t1_test_procedural": "ts-node-dev --respawn ./src/task_1/proc/index.test.js",
+    "t1_dev_oop": "ts-node-dev --respawn ./src/task_1/oop/",
+    "t1_test_oop": "ts-node-dev --respawn ./src/task_1/oop/index.test.js",
+    "t2_dev_oop": "ts-node-dev --respawn ./src/task_2/oop/",
+    "t2_test_oop": "ts-node-dev --respawn ./src/task_2/oop/index.test.js",
     "format": "prettier --write \"src/**/*.{js,ts,json}\""
   },
   "devDependencies": {
