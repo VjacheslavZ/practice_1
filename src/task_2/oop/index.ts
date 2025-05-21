@@ -38,6 +38,7 @@ class PurchaseIterator implements PurchaseIterator {
 class Basket {
   #limit: number;
   #items: IPurchase[] = [];
+  #callback: (items: IPurchase[], total: number) => void;
 
   get items() {
     return this.#items;
@@ -48,52 +49,33 @@ class Basket {
     callback: (items: IPurchase[], total: number) => void,
   ) {
     this.#limit = constrains.limit;
+    this.#callback = callback;
   }
 
   add(item: IPurchase) {
     this.#items.push(item);
   }
 
-  then(callback: (items: IPurchase[], total: number) => void) {
-    return callback(
+  then() {
+    this.#callback(
       this.#items,
       this.#items.reduce((acc, item) => acc + item.price, 0),
     );
   }
-
-  // [Symbol.asyncIterator]() {
-  //   return {
-  //     async next() {
-  //       return { done: true, value: null };
-  //     },
-  //   };
-  // }
 }
 
 const main = async () => {
   const goods = PurchaseIterator.create(MOCK_PURCHASE);
 
-  // const iterator = goods[Symbol.asyncIterator]();
-  // const item1 = await iterator.next();
-  // const item2 = await iterator.next();
-  // const item3 = await iterator.next();
-  // console.log({ item1 });
-  // console.log({ item2 });
-  // console.log({ item3 });
-
   const basket = new Basket({ limit: 1050 }, (items, total) => {
-    console.log('xx', { total });
+    console.log('basket', { total, items });
   });
 
   for await (const item of goods) {
     basket.add(item);
   }
 
-  const basketResult = basket.then((items, total) => {
-    return { items, total };
-  });
-
-  console.dir({ basketResult }, { depth: null });
+  basket.then();
 };
 
 main();
