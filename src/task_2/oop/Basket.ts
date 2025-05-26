@@ -1,7 +1,5 @@
 import { IPurchase, TThen } from './index';
 
-// const { promise, resolve, reject } = Promise.withResolvers();
-
 export class Basket {
   #limit: number;
   #addedItems: IPurchase[] = [];
