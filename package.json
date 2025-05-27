@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A Node.js and TypeScript template project",
   "scripts": {
+    "t1_dev_func": "ts-node-dev --respawn ./src/task_1/func/",
     "t1_dev_procedural": "ts-node-dev --respawn ./src/task_1/proc/",
     "t1_test_procedural": "ts-node-dev --respawn ./src/task_1/proc/index.test.js",
     "t1_dev_oop": "ts-node-dev --respawn ./src/task_1/oop/",
