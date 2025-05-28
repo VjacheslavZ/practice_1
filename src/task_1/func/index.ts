@@ -12,32 +12,32 @@ const convertData = (data: string) =>
 
 const removeHeader = (data: TRows) => data.slice(1);
 
-type TGetMaxDensity = (densityColumnIndex: number) => (data: TRows) => number;
-const getMaxDensity: TGetMaxDensity = densityColumnIndex => data => {
+type TGetMaxDensity = (densityColumnIndex: number, data: TRows) => number;
+const getMaxDensity: TGetMaxDensity = (densityColumnIndex, data) => {
   let maxValue = 0;
-
   for (const row of data) {
     const value = parseFloat(row[densityColumnIndex]);
     if (value > maxValue) {
       maxValue = value;
     }
   }
-
   return maxValue;
 };
 
 type TAddDensityInterest = (
   densityColumnIndex: number,
-) => (maxDensity: number) => (data: TRows) => TRows;
-const addDensityInterest: TAddDensityInterest =
-  densityColumnIndex => maxDensity => data =>
-    data.map(row => {
-      const density = parseFloat(row[densityColumnIndex]);
-      const interest = Math.round((density * 100) / maxDensity).toString();
-      return [...row, interest];
-    });
+) => (data: TRows) => TRows;
+const addDensityInterest: TAddDensityInterest = densityColumnIndex => data => {
+  return data.map(row => {
+    const density = parseFloat(row[densityColumnIndex]);
+    const interest = Math.round(
+      (density * 100) / getMaxDensity(densityColumnIndex, data),
+    ).toString();
+    return [...row, interest];
+  });
+};
 
-const sorted = (data: string[][]) =>
+const sortByInterest = (data: string[][]) =>
   data.toSorted(
     (a, b) =>
       Number(b[config.interestColumnIndex]) -
@@ -60,7 +60,7 @@ const addPadding: TAddPadding = columnsPadsPositions => data => {
     longestByColumn.push(longestValue.length);
   }
 
-  const result: string[][] = [];
+  const result: TRows = [];
   for (const row of data) {
     const newRow: string[] = [];
 
@@ -85,13 +85,12 @@ const printTable: TPrintTable = data => {
   }
 };
 
-const rawData = pipe(convertData, removeHeader)(MOCK_DATA);
-const maxDensity = getMaxDensity(config.densityColumnIndex)(rawData);
-
 const main = pipe(
-  addDensityInterest(config.densityColumnIndex)(maxDensity),
-  sorted,
+  convertData,
+  removeHeader,
+  addDensityInterest(config.densityColumnIndex),
+  sortByInterest,
   addPadding(config.columnsPadsPositions),
   printTable,
 );
-main(rawData);
+main(MOCK_DATA);
