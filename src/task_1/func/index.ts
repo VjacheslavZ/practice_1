@@ -13,8 +13,18 @@ const convertData = (data: string) =>
 const removeHeader = (data: TRows) => data.slice(1);
 
 type TGetMaxDensity = (densityColumnIndex: number) => (data: TRows) => number;
-const getMaxDensity: TGetMaxDensity = densityColumnIndex => data =>
-  Math.max(...data.map(row => parseFloat(row[densityColumnIndex])));
+const getMaxDensity: TGetMaxDensity = densityColumnIndex => data => {
+  let maxValue = 0;
+
+  for (const row of data) {
+    const value = parseFloat(row[densityColumnIndex]);
+    if (value > maxValue) {
+      maxValue = value;
+    }
+  }
+
+  return maxValue;
+};
 
 type TAddDensityInterest = (
   densityColumnIndex: number,
@@ -28,14 +38,11 @@ const addDensityInterest: TAddDensityInterest =
     });
 
 const sorted = (data: string[][]) =>
-  data.sort(
+  data.toSorted(
     (a, b) =>
       Number(b[config.interestColumnIndex]) -
       Number(a[config.interestColumnIndex]),
   );
-
-const rawData = pipe(convertData, removeHeader)(MOCK_DATA);
-const maxDensity = getMaxDensity(config.densityColumnIndex)(rawData);
 
 const addPadding: TAddPadding = columnsPadsPositions => data => {
   const columns = data[0].length;
@@ -43,7 +50,6 @@ const addPadding: TAddPadding = columnsPadsPositions => data => {
 
   for (let col = 0; col < columns; col++) {
     let longestValue = data[0][col];
-
     for (let row = 1; row < data.length; row++) {
       const currentValue = data[row][col];
       const isLonger = currentValue.length > longestValue.length;
@@ -54,17 +60,23 @@ const addPadding: TAddPadding = columnsPadsPositions => data => {
     longestByColumn.push(longestValue.length);
   }
 
-  return data.map(row =>
-    row.map((cell, cellIndex) => {
+  const result: string[][] = [];
+  for (const row of data) {
+    const newRow: string[] = [];
+
+    for (const [cellIndex, cell] of row.entries()) {
       const padType = columnsPadsPositions[cellIndex];
       const maxLength = longestByColumn[cellIndex];
 
-      if (padType === 'end') {
-        return cell.padEnd(maxLength);
-      }
-      return cell.padStart(maxLength);
-    }),
-  );
+      newRow.push(
+        padType === 'end' ? cell.padEnd(maxLength) : cell.padStart(maxLength),
+      );
+    }
+
+    result.push(newRow);
+  }
+
+  return result;
 };
 
 const printTable: TPrintTable = data => {
@@ -72,6 +84,9 @@ const printTable: TPrintTable = data => {
     console.log(row.join(' '));
   }
 };
+
+const rawData = pipe(convertData, removeHeader)(MOCK_DATA);
+const maxDensity = getMaxDensity(config.densityColumnIndex)(rawData);
 
 const main = pipe(
   addDensityInterest(config.densityColumnIndex)(maxDensity),
