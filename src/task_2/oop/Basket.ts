@@ -1,11 +1,17 @@
-import { IPurchase, TThen } from './index';
+import { IPurchase, TResult } from './index';
 
 export class Basket {
-  #limit: number;
+  #resolve;
+  #promise;
+
   #addedItems: IPurchase[] = [];
   #failedItems: IPurchase[] = [];
+  #limit: number;
 
   constructor(constrains: { limit: number }) {
+    const { resolve, promise } = Promise.withResolvers();
+    this.#resolve = resolve;
+    this.#promise = promise;
     this.#limit = constrains.limit;
   }
 
@@ -13,10 +19,10 @@ export class Basket {
     const isEnoughMoney = this.#limit >= item.price;
     const isFirstItem = this.#addedItems.length === 0;
 
-    // add a first item if it's not enough money
     if ((!isEnoughMoney && isFirstItem) || isEnoughMoney) {
       this.#addedItems.push(item);
       this.#limit -= item.price;
+      return;
     }
 
     if (!isEnoughMoney) {
@@ -24,11 +30,15 @@ export class Basket {
     }
   }
 
-  then(resolve: TThen) {
-    return resolve({
+  end() {
+    this.#resolve({
       addedItems: this.#addedItems,
       failedItems: this.#failedItems,
       total: this.#addedItems.reduce((acc, item) => acc + item.price, 0),
     });
+  }
+
+  then(resolve: any) {
+    this.#promise.then(resolve);
   }
 }

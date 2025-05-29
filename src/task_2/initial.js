@@ -21,9 +21,12 @@ const main = async () => {
   const basket = new Basket({ limit: 1050 }, (items, total) => {
     console.log(total);
   });
+  // Hint: call async function without await
   for await (const item of goods) {
     basket.add(item);
   }
+  // Hint: Add backet.end();
+  backet.end();
 };
 
 main();

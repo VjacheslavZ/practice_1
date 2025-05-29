@@ -6,23 +6,30 @@ export interface IPurchase {
   name: string;
   price: number;
 }
-export interface IThen {
+export interface IResult {
   addedItems: IPurchase[];
   failedItems: IPurchase[];
   total: number;
 }
-export type TThen = (res: IThen) => IThen;
+export type TResult = (res: IResult) => IResult;
+
+type TLogger = (basket: Promise<IResult>) => Promise<void>;
+const logger = async (basket: any) => {
+  const result = await basket;
+  console.dir(result, { depth: null });
+};
 
 const main = async () => {
   const goods = PurchaseIterator.create(MOCK_PURCHASE);
   const basket = new Basket({ limit: 1530 });
 
+  logger(basket);
+
   for await (const item of goods) {
     basket.add(item);
   }
 
-  const result = basket.then(res => res);
-  console.dir(result, { depth: null });
+  basket.end();
 };
 main();
 
