@@ -94,3 +94,12 @@ const main = pipe(
   printTable,
 );
 main(MOCK_DATA);
+
+module.exports = {
+  convertData,
+  removeHeader,
+  addDensityInterest,
+  sortByInterest,
+  addPadding,
+  printTable,
+};
