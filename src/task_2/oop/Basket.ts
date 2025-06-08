@@ -43,4 +43,8 @@ export class Basket implements PromiseLike<IResult> {
   ): PromiseLike<TResult1 | TResult2> {
     return this.#promise.then(onfulfilled, onrejected);
   }
+
+  then(resolve: any) {
+    this.#promise.then(resolve);
+  }
 }

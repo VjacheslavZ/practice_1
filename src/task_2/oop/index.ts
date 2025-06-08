@@ -24,6 +24,8 @@ const main = async () => {
 
   logger(basket);
 
+  logger(basket);
+
   for await (const item of goods) {
     basket.add(item);
   }
