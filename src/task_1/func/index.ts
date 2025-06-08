@@ -7,7 +7,7 @@ type TAddPadding = (
 ) => (data: TRows) => TRows;
 type TPrintTable = (data: TRows) => void;
 
-const convertData = (data: string) =>
+const convertData = (data: string): TRows =>
   data.split('\n').map(line => line.trim().split(','));
 
 const removeHeader = (data: TRows) => data.slice(1);
