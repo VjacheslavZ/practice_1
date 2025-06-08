@@ -37,10 +37,9 @@ export class Basket implements PromiseLike<IResult> {
     return this;
   }
 
-  then<TResult1 = IResult, TResult2 = never>(
-    onfulfilled?: ((value: IResult) => TResult1 | PromiseLike<TResult1>) | null,
-    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null,
-  ): PromiseLike<TResult1 | TResult2> {
-    return this.#promise.then(onfulfilled, onrejected);
+  then<TResult = IResult>(
+    onfulfilled?: (value: IResult) => PromiseLike<TResult>,
+  ): PromiseLike<TResult> {
+    return this.#promise.then(onfulfilled);
   }
 }
