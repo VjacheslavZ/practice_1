@@ -4,6 +4,10 @@ const { describe, test } = require('node:test');
 const assert = require('node:assert');
 const { config } = require('./config');
 const { TableBuilder } = require('./TableBuilder');
+const {
+  TableBuilderDirector,
+  TablePrinterDirector,
+} = require('./TableBuilderDirector');
 
 const MOCK_DATA = `city,population,area,density,country
     Shanghai,24256800,6340,3826,China
@@ -76,6 +80,55 @@ describe('OOP variant', () => {
 
       table.print();
       assert.equal(logOutput, '    Shanghai 24256800 6340 3826 China 35');
+
+      console.log = log;
+      console.log(logOutput);
+    });
+  });
+  describe('Test methods of TablePrinterDirector', () => {
+    const table = new TableBuilder(MOCK_DATA, config);
+    new TableBuilderDirector(table).createInstance();
+    const tablePrinter = new TablePrinterDirector(table);
+
+    test('Print with padding', () => {
+      const { log } = console;
+      let logOutput = '';
+      console.log = msg => {
+        logOutput += msg;
+      };
+
+      tablePrinter.printWithPadding();
+
+      table.print();
+      assert.equal(
+        logOutput,
+        '    New York City  8537673  784 10892 United States 100' +
+          '    Shanghai      24256800 6340  3826         China  35' +
+          '    New York City 8537673 784 10892 United States 100' +
+          '    Shanghai 24256800 6340 3826 China 35',
+      );
+
+      console.log = log;
+      console.log(logOutput);
+    });
+    test('Print without padding', () => {
+      const { log } = console;
+      let logOutput = '';
+      console.log = msg => {
+        logOutput += msg;
+      };
+
+      tablePrinter.printWithoutPadding();
+
+      table.print();
+
+      assert.equal(
+        logOutput,
+        '    New York City 8537673 784 10892 United States 100' +
+          '    Shanghai 24256800 6340 3826 China 35' +
+          '    New York City 8537673 784 10892 United States 100' +
+          '    Shanghai 24256800 6340 3826 China 35',
+      );
 
       console.log = log;
       console.log(logOutput);

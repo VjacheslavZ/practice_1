@@ -13,8 +13,8 @@ import {
   new TableBuilderDirector(table).createInstance();
 
   const tablePrinter = new TablePrinterDirector(table);
-  console.log('--printWithPadding--');
+  console.log('Print with padding');
   tablePrinter.printWithPadding();
-  console.log('--printWithoutPadding--');
+  console.log('Print without padding');
   tablePrinter.printWithoutPadding();
 }
