@@ -10,7 +10,6 @@
     "t1_dev_oop": "ts-node-dev --respawn --transpile-only --no-notify ./src/task_1/oop/ & tsc --noEmit --watch --preserveWatchOutput",
     "t1_test_oop": "ts-node-dev --respawn --transpile-only --no-notify ./src/task_1/oop/index.test.ts & tsc --noEmit --watch --preserveWatchOutput",
     "t2_dev_oop": "ts-node-dev --respawn --transpile-only --no-notify ./src/task_2/oop/ & tsc --noEmit --watch --preserveWatchOutput",
-    "t2_test_oop": "ts-node-dev --respawn --transpile-only --no-notify ./src/task_2/oop/index.test.js & tsc --noEmit --watch --preserveWatchOutput",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
     "format": "prettier --write \"src/**/*.{js,ts,json}\"",

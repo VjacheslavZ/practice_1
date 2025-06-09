@@ -31,5 +31,3 @@ console.log('--printWithPadding--');
 tablePrinter.printWithPadding();
 console.log('--printWithoutPadding--');
 tablePrinter.printWithoutPadding();
-
-module.exports = { Table, config };
