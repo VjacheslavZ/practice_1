@@ -30,7 +30,7 @@ class AbstractTableBuilder {
     throw new Error('Method addPadding should be implemented');
   }
 
-  print(data?: string[][]) {
+  print(_data?: string[][]) {
     throw new Error('Method print should be implemented');
   }
 }

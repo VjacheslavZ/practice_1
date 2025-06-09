@@ -27,8 +27,9 @@ const table = new TableBuilder(MOCK_DATA, config);
 new TableBuilderDirector(table).createInstance();
 
 const tablePrinter = new TablePrinterDirector(table);
+console.log('--printWithPadding--');
 tablePrinter.printWithPadding();
-console.log('----');
+console.log('--printWithoutPadding--');
 tablePrinter.printWithoutPadding();
 
 module.exports = { Table, config };
