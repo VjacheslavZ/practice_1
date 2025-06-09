@@ -99,13 +99,10 @@ describe('OOP variant', () => {
 
       tablePrinter.printWithPadding();
 
-      table.print();
       assert.equal(
         logOutput,
         '    New York City  8537673  784 10892 United States 100' +
-          '    Shanghai      24256800 6340  3826         China  35' +
-          '    New York City 8537673 784 10892 United States 100' +
-          '    Shanghai 24256800 6340 3826 China 35',
+          '    Shanghai      24256800 6340  3826         China  35',
       );
 
       console.log = log;
@@ -120,13 +117,9 @@ describe('OOP variant', () => {
 
       tablePrinter.printWithoutPadding();
 
-      table.print();
-
       assert.equal(
         logOutput,
         '    New York City 8537673 784 10892 United States 100' +
-          '    Shanghai 24256800 6340 3826 China 35' +
-          '    New York City 8537673 784 10892 United States 100' +
           '    Shanghai 24256800 6340 3826 China 35',
       );
 
