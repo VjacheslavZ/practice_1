@@ -1,6 +1,6 @@
 'use strict';
 
-import { IConfig, config } from '../config';
+import { config } from '../config';
 import { MOCK_DATA } from '../mockData';
 import { TableBuilder } from './TableBuilder';
 import {
@@ -8,26 +8,13 @@ import {
   TablePrinterDirector,
 } from './TableBuilderDirector';
 
-export class Table {
-  maxDensity = 0;
-  data: string[][];
-  config: IConfig;
+{
+  const table = new TableBuilder(MOCK_DATA, config);
+  new TableBuilderDirector(table).createInstance();
 
-  constructor(data: string, config: IConfig) {
-    const lines = data.split('\n').map(line => line.split(','));
-    lines.shift();
-
-    this.data = lines;
-    this.config = config;
-  }
+  const tablePrinter = new TablePrinterDirector(table);
+  console.log('--printWithPadding--');
+  tablePrinter.printWithPadding();
+  console.log('--printWithoutPadding--');
+  tablePrinter.printWithoutPadding();
 }
-
-// Usage
-const table = new TableBuilder(MOCK_DATA, config);
-new TableBuilderDirector(table).createInstance();
-
-const tablePrinter = new TablePrinterDirector(table);
-console.log('--printWithPadding--');
-tablePrinter.printWithPadding();
-console.log('--printWithoutPadding--');
-tablePrinter.printWithoutPadding();

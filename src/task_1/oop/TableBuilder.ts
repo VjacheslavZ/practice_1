@@ -1,5 +1,5 @@
+import { Table } from './Table';
 import { IConfig } from './config';
-import { Table } from './index';
 
 class AbstractTableBuilder {
   constructor() {
