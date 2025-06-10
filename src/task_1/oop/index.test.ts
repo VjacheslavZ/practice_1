@@ -1,8 +1,10 @@
 'use strict';
 
+import { config } from '../config';
+
 const { describe, test } = require('node:test');
 const assert = require('node:assert');
-const { config } = require('./config');
+
 const { TableBuilder } = require('./TableBuilder');
 const {
   TableBuilderDirector,
