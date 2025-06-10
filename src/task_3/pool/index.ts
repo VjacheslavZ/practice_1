@@ -1,15 +1,22 @@
 'use strict';
-// @ts-nocheck
+
 {
-  const poolify = (factory, options, size, max) => {
+  const poolify = <T, O>(
+    factory: (...args: O[]) => T,
+    options: O[],
+    size: number,
+    max: number,
+  ) => {
     const instances = new Array(size).fill(null).map(() => factory(...options));
 
     const getInstance = () => {
       const instance = instances.pop() || factory(...options);
       return instance;
     };
-    const putInstance = instance => {
-      instances.push(instance);
+    const putInstance = (instance: T) => {
+      if (instances.length < max) {
+        instances.push(instance);
+      }
     };
 
     return {
@@ -23,6 +30,5 @@
   const pool = poolify(createBufferFactory, [4096], 10, 15);
 
   const instance = pool.getInstance();
-  console.log('instance --- ', instance.length);
   pool.putInstance(instance);
 }
