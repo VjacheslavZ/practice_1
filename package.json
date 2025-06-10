@@ -12,6 +12,7 @@
     "t1_mixed": "ts-node-dev --respawn --transpile-only --no-notify ./src/task_1/mixed/index.ts & tsc --noEmit --watch --preserveWatchOutput",
     "t1_test_mixed": "ts-node-dev --respawn --transpile-only --no-notify ./src/task_1/mixed/index.test.ts & tsc --noEmit --watch --preserveWatchOutput",
     "t2_dev_oop": "ts-node-dev --respawn --transpile-only --no-notify ./src/task_2/oop/ & tsc --noEmit --watch --preserveWatchOutput",
+    "t3_dev_pool": "ts-node-dev --respawn --transpile-only --no-notify ./src/task_3/pool/ & tsc --noEmit --watch --preserveWatchOutput",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
     "format": "prettier --write \"src/**/*.{js,ts,json}\"",
