@@ -1,19 +1,15 @@
 'use strict';
 
-import { resolve } from 'node:path';
-
-// Implement async instance acquisition in classes version with queue and callbacks
-//Rewrite acquisition to promises in classes version
+type TResolve<T> = (value: T | PromiseLike<T>) => void;
 {
   class Pool<T, O> {
     #instances: T[] = [];
     #max: number;
 
     #free: boolean[] = [];
-    #queue = [];
+    #queue: TResolve<T>[] = [];
     #current = 0;
     #available = 0;
-    #size: number;
 
     constructor(
       factory: (...args: O[]) => T,
@@ -22,7 +18,6 @@ import { resolve } from 'node:path';
       max: number,
     ) {
       this.#max = max;
-      this.#size = size;
 
       this.#free = new Array(size).fill(true);
       this.#current = 0;
@@ -34,8 +29,8 @@ import { resolve } from 'node:path';
     }
 
     async next() {
-      if (this.#available === 0) {
-        return new Promise<T>(resolve => {
+      if (!this.#available) {
+        return new Promise<T>((resolve: TResolve<T>) => {
           this.#queue.push(resolve);
         });
       }
@@ -44,11 +39,8 @@ import { resolve } from 'node:path';
       do {
         instance = this.#instances[this.#current];
         free = this.#free[this.#current];
-        this.#current++;
         // this.#available--;
-        if (this.#current === this.#size) {
-          this.#current = 0;
-        }
+        this.#current++;
       } while (!free || !instance);
       return instance;
     }
@@ -82,32 +74,27 @@ import { resolve } from 'node:path';
 
   // Usage
   const main = async () => {
-    // @ts-ignore
-    const instancesToReturn = [];
+    const instancesToReturn: Uint8Array<ArrayBuffer>[] = [];
 
     const createBufferFactory = (size: number) => new Uint8Array(size);
-    const pool = new Pool(createBufferFactory, [6], 10, 15);
+    const pool = new Pool(createBufferFactory, [4], 10, 15);
 
     setTimeout(() => {
-      // @ts-ignore
       pool.putInstance(instancesToReturn[0]);
     }, 2000);
 
     setTimeout(() => {
-      // @ts-ignore
       pool.putInstance(instancesToReturn[1]);
     }, 3000);
 
     setTimeout(() => {
-      // @ts-ignore
       pool.putInstance(instancesToReturn[2]);
     }, 4000);
 
     for (let i = 0; i < 13; i++) {
       const instance = await pool.getInstance();
-      console.log(`instance #${i}`);
-
-      if (i < 3) {
+      console.log(`instance #${i}`, instance);
+      if (i < 3 && instance) {
         instancesToReturn.push(instance);
       }
     }
