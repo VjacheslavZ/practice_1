@@ -1,4 +1,4 @@
-import { IConfig } from './../config';
+import { IConfig } from '../config';
 import { Table } from './Table';
 
 class AbstractTableBuilder {

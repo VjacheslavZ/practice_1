@@ -1,4 +1,4 @@
-import { IConfig } from './../config';
+import { IConfig } from '../config';
 
 export class Table {
   maxDensity = 0;

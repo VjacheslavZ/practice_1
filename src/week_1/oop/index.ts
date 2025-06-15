@@ -1,7 +1,7 @@
 'use strict';
 
+import { config } from '../config';
 import { MOCK_DATA } from '../mockData';
-import { config } from './../config';
 import { TableBuilder } from './TableBuilder';
 import {
   TableBuilderDirector,
