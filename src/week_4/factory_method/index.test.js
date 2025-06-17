@@ -2,9 +2,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { describe, it } = require('node:test');
 const assert = require('node:assert');
-const readline = require('node:readline');
 
-const { FileLineCursor, FileStorage } = require('./index');
+const FileLineCursor = require('./FileLineCursor');
+const FileStorage = require('./FileStorage');
 
 const storagePath = './storage.test.dat';
 
