@@ -1,5 +1,6 @@
 'use strict';
-const FileStorage = require('./FileStorage');
+
+import FileStorage from './FileStorage';
 
 // Usage
 const main = async () => {

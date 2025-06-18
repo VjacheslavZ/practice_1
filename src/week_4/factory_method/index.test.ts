@@ -1,10 +1,9 @@
-const fs = require('node:fs');
-const path = require('node:path');
-const { describe, it } = require('node:test');
-const assert = require('node:assert');
-
-const FileLineCursor = require('./FileLineCursor');
-const FileStorage = require('./FileStorage');
+import FileLineCursor from './FileLineCursor';
+import FileStorage from './FileStorage';
+import assert from 'node:assert';
+import fs from 'node:fs';
+import path from 'node:path';
+import { describe, it } from 'node:test';
 
 const storagePath = './storage.test.dat';
 
