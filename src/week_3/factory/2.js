@@ -4,12 +4,10 @@ class Person {
   constructor(name) {
     this.name = name;
   }
-
-  static factory(name) {
-    return new Person(name);
-  }
 }
 
-const personFactory = Person.factory;
+const personFactory = name => {
+  return new Person(name);
+};
 
 module.exports = { Person, personFactory };

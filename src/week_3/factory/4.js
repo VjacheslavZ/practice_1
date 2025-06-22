@@ -22,3 +22,5 @@ const product = productFactory.factoryMethod('value');
 const product2 = productFactory.factoryMethod('value2');
 console.dir(product);
 console.dir(product2);
+
+//w3 fix max, process next tick

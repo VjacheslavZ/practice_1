@@ -2,11 +2,18 @@
 
 const POOL_SIZE = 1000;
 
-const poolify = <F>(factory: () => F, options: { poolSize: number }) => {
-  const instances = new Array(options.poolSize).fill(null).map(factory);
+const poolify = <F>(
+  factory: ({ size, initValue }: { size: number; initValue: number }) => F,
+  options: { poolSize: number; initValue: number; size: number },
+) => {
+  const makeFactory = () =>
+    factory({ size: options.size, initValue: options.initValue });
+  const instances = new Array(options.poolSize).fill(null).map(makeFactory);
 
   const acquire: () => F = () => {
-    const instance = instances.pop() || factory();
+    const instance =
+      instances.pop() ||
+      factory({ size: options.size, initValue: options.initValue });
     console.log('Get from pool, count =', instances.length);
     return instance;
   };
@@ -20,17 +27,17 @@ const poolify = <F>(factory: () => F, options: { poolSize: number }) => {
 };
 
 // Usage
-const factory = (): Array<number> => new Array(1000).fill(0);
-const arrayPool = poolify(factory, { poolSize: POOL_SIZE });
+const factory =
+  ({ size, initValue }: { size: number; initValue: number }) =>
+  () =>
+    new Array(size).fill(initValue);
+
+const arrayPool = poolify(factory, {
+  size: 1000,
+  initValue: 0,
+  poolSize: POOL_SIZE,
+});
 
 const a1 = arrayPool.acquire();
-const b1 = a1.map((_x, i) => i).reduce((x, y) => x + y);
-console.log(b1);
-
-const a2 = factory();
-const b2 = a2.map((_x, i) => i).reduce((x, y) => x + y);
-console.log(b2);
-
-const a3 = factory();
-const b3 = a3.map((_x, i) => i).reduce((x, y) => x + y);
-console.log(b3);
+// const b1 = a1.map((x, i) => i).reduce((x, y) => x + y);
+// console.log(b1);

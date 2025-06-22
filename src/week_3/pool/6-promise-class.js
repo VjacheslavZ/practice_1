@@ -1,5 +1,5 @@
 'use strict';
-
+// Fix max
 class Pool {
   #max;
   #queue = [];
@@ -31,6 +31,7 @@ class Pool {
     if (this.#queue.length > 0) {
       const resolve = this.#queue.shift();
       resolve(instance);
+      return;
     }
 
     if (this.#instances.length < this.#max) {
