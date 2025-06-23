@@ -1,8 +1,5 @@
-'use strict';
-
 import FileStorage from './FileStorage';
 
-// Usage
 const main = async () => {
   const db = new FileStorage('./storage.dat');
   const cursor = db.select({ city: 'Roma' });
