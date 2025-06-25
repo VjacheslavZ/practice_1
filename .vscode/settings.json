@@ -15,5 +15,5 @@
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "cSpell.words": ["poolify"]
+  "cSpell.words": ["behaviour", "poolify"]
 }
