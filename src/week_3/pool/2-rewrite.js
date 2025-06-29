@@ -5,15 +5,15 @@
     #instances = [];
     #max;
     #factory;
-    #produced = 0;
+    #producedCount = 0;
     #size = 0;
 
-    constructor(factory, { size, max }) {
-      this.#instances = new Array(size).fill(null).map(factory);
+    constructor(factory, options, { size, max }) {
+      this.#instances = new Array(size).fill(null).map(() => factory(options));
       this.#max = max;
       this.#factory = factory;
       this.#size = size;
-      this.#produced = size;
+      this.#producedCount = size;
     }
 
     acquire() {
@@ -22,8 +22,8 @@
         return instance;
       }
 
-      if (this.#produced < this.#max) {
-        this.#produced++;
+      if (this.#producedCount < this.#max) {
+        this.#producedCount++;
         return this.#factory();
       }
 
@@ -31,14 +31,16 @@
     }
 
     release(instance) {
-      if (this.#instances.length < this.#max) {
-        this.#instances.push(instance);
-      }
+      this.#instances.push(instance);
     }
   }
 
-  const createBuffer = size => new Uint8Array(size);
   const FILE_BUFFER_SIZE = 4096;
-  const createFileBuffer = () => createBuffer(FILE_BUFFER_SIZE);
-  const pool = new Pool(createFileBuffer, { size: 2, max: 4 });
+  const createBuffer = size => new Uint8Array(size);
+  const createFileBuffer = ({ bufferSize }) => createBuffer(bufferSize);
+  const pool = new Pool(
+    createFileBuffer,
+    { bufferSize: FILE_BUFFER_SIZE },
+    { size: 2, max: 4 },
+  );
 }

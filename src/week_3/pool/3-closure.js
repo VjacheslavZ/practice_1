@@ -1,10 +1,9 @@
 'use strict';
-// use max
-
 {
-  const poolify = (factory, { size, max }) => {
+  const poolify = (factory, options, { size, max }) => {
     const queue = [];
-    const instances = new Array(size).fill(null).map(factory);
+    let producedCount = size;
+    const instances = new Array(size).fill(null).map(() => factory(options));
 
     const acquire = cb => {
       console.log('acquire instances', instances.length);
@@ -12,6 +11,11 @@
         const instance = instances.pop();
         return process.nextTick(() => cb(instance));
       }
+      if (producedCount < max) {
+        producedCount++;
+        return process.nextTick(() => cb(factory(options)));
+      }
+
       queue.push(cb);
     };
 
@@ -23,10 +27,8 @@
         return;
       }
 
-      if (instances.length < max) {
-        instances.push(instance);
-        console.log('release to instances', instances.length);
-      }
+      instances.push(instance);
+      console.log('release to instances', instances.length);
     };
 
     return { acquire, release };
@@ -34,8 +36,12 @@
 
   const createBuffer = size => new Uint8Array(size);
   const FILE_BUFFER_SIZE = 4;
-  const createFileBuffer = () => createBuffer(FILE_BUFFER_SIZE);
-  const pool = poolify(createFileBuffer, { size: 2, max: 4 });
+  const createFileBuffer = ({ bufferSize }) => createBuffer(bufferSize);
+  const pool = poolify(
+    createFileBuffer,
+    { bufferSize: FILE_BUFFER_SIZE },
+    { size: 2, max: 4 },
+  );
 
   const cb = timeout => instance => {
     setTimeout(() => {

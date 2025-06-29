@@ -4,10 +4,16 @@ class Pool {
   #max;
   #queue = [];
   #instances = [];
+  #producedCount = 0;
+  #factory;
+  #options;
 
-  constructor(factory, { size, max }) {
-    this.#instances = new Array(size).fill(null).map(factory);
+  constructor(factory, options, { size, max }) {
+    this.#instances = new Array(size).fill(null).map(() => factory(options));
     this.#max = max;
+    this.#factory = factory;
+    this.#options = options;
+    this.#producedCount = size;
   }
 
   async acquire() {
@@ -18,6 +24,11 @@ class Pool {
     return new Promise(resolve => {
       if (this.#instances.length > 0) {
         return resolve(this.#instances.pop());
+      }
+
+      if (this.#producedCount < this.#max) {
+        this.#producedCount++;
+        return resolve(this.#factory(this.#options));
       }
 
       this.#queue.push(resolve);
@@ -34,16 +45,18 @@ class Pool {
       return;
     }
 
-    if (this.#instances.length < this.#max) {
-      this.#instances.push(instance);
-    }
+    this.#instances.push(instance);
   }
 }
 
-const createBuffer = size => new Uint8Array(size);
 const FILE_BUFFER_SIZE = 4;
-const createFileBuffer = () => createBuffer(FILE_BUFFER_SIZE);
-const pool = new Pool(createFileBuffer, { size: 2, max: 2 });
+const createBuffer = size => new Uint8Array(size);
+const createFileBuffer = ({ bufferSize }) => createBuffer(bufferSize);
+const pool = new Pool(
+  createFileBuffer,
+  { bufferSize: FILE_BUFFER_SIZE },
+  { size: 2, max: 2 },
+);
 
 const timeout = ms => new Promise(res => setTimeout(res, ms));
 

@@ -2,7 +2,7 @@
 
 {
   const poolify = (factory, options, size, max) => {
-    let produced = size;
+    let producedCount = size;
     const instances = new Array(size).fill(null).map(() => factory(options));
 
     const acquire = () => {
@@ -10,8 +10,8 @@
       if (instance) {
         return instance;
       }
-      if (produced < max) {
-        produced++;
+      if (producedCount < max) {
+        producedCount++;
         return factory(options);
       }
 
@@ -19,9 +19,7 @@
     };
 
     const release = instance => {
-      if (instances.length < max) {
-        instances.push(instance);
-      }
+      instances.push(instance);
     };
     return { acquire, release };
   };

@@ -1,19 +1,24 @@
 'use strict';
 // Fix max
 {
-  const poolify = (factory, { size, max }) => {
+  const poolify = (factory, options, { size, max }) => {
     const queue = [];
-    const instances = new Array(size).fill(null).map(factory);
+    let producedCount = size;
+    const instances = new Array(size).fill(null).map(() => factory(options));
 
     const acquire = async () => {
-      // console.log('acquire', {
-      //   instances: instances.length,
-      //   queue: queue.length,
-      // });
       return new Promise(resolve => {
         if (instances.length > 0) {
-          return resolve(instances.pop());
+          resolve(instances.pop());
+          return;
         }
+
+        if (producedCount < max) {
+          producedCount++;
+          resolve(factory(options));
+          return;
+        }
+
         queue.push(resolve);
       });
     };
@@ -30,18 +35,20 @@
         return;
       }
 
-      if (instances.length < max) {
-        instances.push(instance);
-      }
+      instances.push(instance);
     };
 
     return { acquire, release };
   };
 
-  const createBuffer = size => new Uint8Array(size);
   const FILE_BUFFER_SIZE = 4;
-  const createFileBuffer = () => createBuffer(FILE_BUFFER_SIZE);
-  const pool = poolify(createFileBuffer, { size: 2, max: 4 });
+  const createBuffer = size => new Uint8Array(size);
+  const createFileBuffer = ({ bufferSize }) => createBuffer(bufferSize);
+  const pool = poolify(
+    createFileBuffer,
+    { bufferSize: FILE_BUFFER_SIZE },
+    { size: 2, max: 4 },
+  );
 
   const timeout = ms => new Promise(res => setTimeout(res, ms));
 
