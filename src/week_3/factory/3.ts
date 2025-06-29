@@ -6,8 +6,7 @@ const poolify = <F>(
   factory: ({ size, initValue }: { size: number; initValue: number }) => F,
   options: { poolSize: number; initValue: number; size: number },
 ) => {
-  const makeFactory = () =>
-    factory({ size: options.size, initValue: options.initValue });
+  const makeFactory = () => factory(options);
   const instances = new Array(options.poolSize).fill(null).map(makeFactory);
 
   const acquire: () => F = () => {

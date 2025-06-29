@@ -7,20 +7,16 @@ class Product {
 }
 
 class Creator {
-  constructor(Entity) {
+  #args;
+  constructor(Entity, ...args) {
     this.Entity = Entity;
+    this.#args = args;
   }
-  factoryMethod(...args) {
-    return new this.Entity(...args);
+  factoryMethod() {
+    return new this.Entity(...this.#args);
   }
 }
 
 // Usage
-const productFactory = new Creator(Product);
-console.dir(productFactory);
-const product = productFactory.factoryMethod('value');
-const product2 = productFactory.factoryMethod('value2');
-console.dir(product);
-console.dir(product2);
-
-//w3 fix max, process next tick
+const productFactory = new Creator(Product, 'value');
+const product = productFactory.factoryMethod();
