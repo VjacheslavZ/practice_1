@@ -23,8 +23,7 @@
       if (queue.length > 0) {
         const cb = queue.shift();
         console.log('release from queue');
-        cb(instance);
-        return;
+        return process.nextTick(() => cb(instance));
       }
 
       instances.push(instance);

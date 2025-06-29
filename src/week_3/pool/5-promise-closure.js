@@ -1,5 +1,4 @@
 'use strict';
-// Fix max
 {
   const poolify = (factory, options, { size, max }) => {
     const queue = [];
@@ -9,14 +8,12 @@
     const acquire = async () => {
       return new Promise(resolve => {
         if (instances.length > 0) {
-          resolve(instances.pop());
-          return;
+          return resolve(instances.pop());
         }
 
         if (producedCount < max) {
           producedCount++;
-          resolve(factory(options));
-          return;
+          return resolve(factory(options));
         }
 
         queue.push(resolve);
@@ -31,8 +28,7 @@
 
       if (queue.length > 0) {
         const resolve = queue.shift();
-        resolve(instance);
-        return;
+        return resolve(instance);
       }
 
       instances.push(instance);

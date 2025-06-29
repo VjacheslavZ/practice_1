@@ -6,14 +6,14 @@
     #max;
     #factory;
     #producedCount = 0;
-    #size = 0;
+    #options;
 
     constructor(factory, options, { size, max }) {
       this.#instances = new Array(size).fill(null).map(() => factory(options));
       this.#max = max;
       this.#factory = factory;
-      this.#size = size;
       this.#producedCount = size;
+      this.#options = options;
     }
 
     acquire() {
@@ -24,7 +24,7 @@
 
       if (this.#producedCount < this.#max) {
         this.#producedCount++;
-        return this.#factory();
+        return this.#factory(this.#options);
       }
 
       throw new Error('No instances available');

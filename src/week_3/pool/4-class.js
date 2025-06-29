@@ -20,14 +20,12 @@
     acquire(callback) {
       if (this.#instances.length > 0) {
         const instance = this.#instances.pop();
-        process.nextTick(() => callback(instance));
-        return;
+        return process.nextTick(() => callback(instance));
       }
 
       if (this.#producedCount < this.#max) {
         this.#producedCount++;
-        process.nextTick(() => callback(this.#factory(this.#options)));
-        return;
+        return process.nextTick(() => callback(this.#factory(this.#options)));
       }
 
       this.#queue.push(callback);
@@ -36,8 +34,7 @@
     release(instance) {
       if (this.#queue.length > 0) {
         const callBack = this.#queue.shift();
-        process.nextTick(() => callBack(instance));
-        return;
+        return process.nextTick(() => callBack(instance));
       }
 
       this.#instances.push(instance);
@@ -54,17 +51,9 @@
   );
 
   const cb = async instance => {
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
     pool.release(instance);
   };
 
-  pool.acquire(cb);
-  pool.acquire(cb);
-
-  pool.acquire(cb);
-  pool.acquire(cb);
-  pool.acquire(cb);
-  pool.acquire(cb);
-  pool.acquire(cb);
   pool.acquire(cb);
 }

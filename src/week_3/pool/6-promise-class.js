@@ -1,5 +1,5 @@
 'use strict';
-// Fix max
+
 class Pool {
   #max;
   #queue = [];
@@ -17,10 +17,6 @@ class Pool {
   }
 
   async acquire() {
-    console.log('acquire', {
-      instances: this.#instances.length,
-      queue: this.#queue.length,
-    });
     return new Promise(resolve => {
       if (this.#instances.length > 0) {
         return resolve(this.#instances.pop());
@@ -34,15 +30,11 @@ class Pool {
       this.#queue.push(resolve);
     });
   }
+
   release(instance) {
-    console.log('release', {
-      instances: this.#instances.length,
-      queue: this.#queue.length,
-    });
     if (this.#queue.length > 0) {
       const resolve = this.#queue.shift();
-      resolve(instance);
-      return;
+      return resolve(instance);
     }
 
     this.#instances.push(instance);
