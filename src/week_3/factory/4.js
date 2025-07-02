@@ -20,3 +20,4 @@ class Creator {
 // Usage
 const productFactory = new Creator(Product, 'value');
 const product = productFactory.factoryMethod();
+console.log(product);

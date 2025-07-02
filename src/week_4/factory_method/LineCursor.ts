@@ -1,5 +1,5 @@
-import FileStorage from './FileStorage';
 import readline from 'node:readline';
+import { Readable } from 'node:stream';
 
 class Cursor {
   current: number;
@@ -17,17 +17,21 @@ class Cursor {
   }
 }
 
-class FileLineCursor extends Cursor {
+interface Storage {
+  stream: Readable;
+}
+
+class LineCursor extends Cursor {
   query: Record<string, string>;
   // interface AsyncIterator<T, TReturn = any, TNext = any>
   lines: AsyncIterator<string, JSON, Record<string, string>>;
 
-  constructor(fileStorage: FileStorage, query: Record<string, string>) {
+  constructor(storage: Storage, query: Record<string, string>) {
     super();
     this.query = query;
     this.lines = readline
       .createInterface({
-        input: fileStorage.fileStream,
+        input: storage.stream,
         crlfDelay: Infinity,
       })
       [Symbol.asyncIterator]();
@@ -55,4 +59,4 @@ class FileLineCursor extends Cursor {
   }
 }
 
-export default FileLineCursor;
+export default LineCursor;

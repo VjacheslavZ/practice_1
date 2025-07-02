@@ -1,6 +1,8 @@
 // Rewrite example from 3-function.js to decouple strategy implementation and console
 // Resurn string from all strategy implementations
 // Here is an example: console.log(png(persons))
+const { Console } = require('node:console');
+const { Writable } = require('node:stream');
 
 const RENDERERS = {
   abstract: () => {
@@ -8,7 +10,17 @@ const RENDERERS = {
   },
 
   console: data => {
-    return data; //.join('\n');
+    let stringOutput = '';
+
+    const stdout = new Writable({
+      write(chunk) {
+        stringOutput += chunk.toString();
+      },
+    });
+    const logger = new Console({ stdout });
+    logger.log(data);
+
+    return stringOutput;
   },
 
   web: data => {
@@ -66,7 +78,7 @@ console.log(png(persons));
 console.groupEnd();
 
 console.group('\nConsoleRenderer:');
-console.table(con(persons));
+console.log(con(persons));
 console.groupEnd();
 
 console.group('\nWebRenderer:');

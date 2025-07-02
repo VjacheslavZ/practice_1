@@ -21,6 +21,7 @@
     const release = instance => {
       instances.push(instance);
     };
+
     return { acquire, release };
   };
   // Usage

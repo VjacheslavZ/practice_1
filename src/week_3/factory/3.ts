@@ -10,16 +10,12 @@ const poolify = <F>(
   const instances = new Array(options.poolSize).fill(null).map(makeFactory);
 
   const acquire: () => F = () => {
-    const instance =
-      instances.pop() ||
-      factory({ size: options.size, initValue: options.initValue });
-    console.log('Get from pool, count =', instances.length);
+    const instance = instances.pop() || factory(options);
     return instance;
   };
 
   const release: (instance: F) => void = instance => {
     instances.push(instance);
-    console.log('Recycle item, count =', instances.length);
   };
 
   return { acquire, release };

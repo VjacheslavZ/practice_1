@@ -19,13 +19,13 @@ class Strategy {
   }
 
   registerBehaviour(implementationName, behaviour) {
-    const missedActionName = Object.keys(behaviour).find(
+    const unregisteredActions = Object.keys(behaviour).filter(
       action => !this.#actions.includes(action),
     );
 
-    if (missedActionName) {
-      throw new Error(
-        `Strategy "${this.#strategyName}": Behaviour "${implementationName}" is missing required action "${missedActionName}"`,
+    if (unregisteredActions.length > 0) {
+      console.warn(
+        `Strategy "${this.#strategyName}": Implementation "${implementationName}" has unregistered actions "${unregisteredActions.join(', ')}"`,
       );
     }
 
@@ -59,9 +59,6 @@ notifyStrategy.registerBehaviour('email', {
     console.log(`Sending "email" notification to all`);
     console.log(`Message length: ${message.length}`);
   },
-  //   test: () => {
-  //     console.log('test');
-  //   },
 });
 
 notifyStrategy.registerBehaviour('sms', {

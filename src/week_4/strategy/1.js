@@ -43,13 +43,9 @@ const RENDERERS = {
   },
 };
 
-const selectStrategy = (strategy, name) => {
-  const strategies = new Map(Object.entries(strategy));
-  const renderer = strategies.get(name);
-  if (!renderer) {
-    return () => strategy['abstract']();
-  }
-  return data => renderer(data);
+const selectStrategy = (strategies, name) => {
+  const strategy = name in strategies ? strategies[name] : strategies.abstract;
+  return data => strategy(data);
 };
 
 const png = selectStrategy(RENDERERS, 'png');

@@ -6,7 +6,6 @@
     const instances = new Array(size).fill(null).map(() => factory(options));
 
     const acquire = cb => {
-      console.log('acquire instances', instances.length);
       if (instances.length > 0) {
         const instance = instances.pop();
         return process.nextTick(() => cb(instance));
@@ -22,12 +21,10 @@
     const release = instance => {
       if (queue.length > 0) {
         const cb = queue.shift();
-        console.log('release from queue');
         return process.nextTick(() => cb(instance));
       }
 
       instances.push(instance);
-      console.log('release to instances', instances.length);
     };
 
     return { acquire, release };

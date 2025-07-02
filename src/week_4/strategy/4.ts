@@ -16,13 +16,13 @@ class Strategy {
     implementationName: string,
     behaviour: Record<string, (...args: any[]) => void>,
   ) {
-    const missedBehaviourName = Object.keys(behaviour).find(
+    const unregisteredActions = Object.keys(behaviour).filter(
       action => !this.#actions.includes(action),
     );
 
-    if (missedBehaviourName) {
-      throw new Error(
-        `Strategy "${this.#strategyName}": Behaviour "${implementationName}" is missing required action "${missedBehaviourName}"`,
+    if (unregisteredActions.length > 0) {
+      console.warn(
+        `Strategy "${this.#strategyName}": Behaviour "${implementationName}" has unregistered actions "${unregisteredActions.join(', ')}"`,
       );
     }
 
