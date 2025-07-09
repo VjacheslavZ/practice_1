@@ -19,6 +19,13 @@ class Strategy {
   }
 
   registerBehaviour(implementationName, behaviour) {
+    const missedBehaviours = this.#actions.filter(action => !behaviour[action]);
+    if (missedBehaviours.length > 0) {
+      throw new Error(
+        `Strategy "${this.#strategyName}": Implementation "${implementationName}" has missed behaviours for "${missedBehaviours.join(', ')}"`,
+      );
+    }
+
     const unregisteredActions = Object.keys(behaviour).filter(
       action => !this.#actions.includes(action),
     );

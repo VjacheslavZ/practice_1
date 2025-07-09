@@ -1,25 +1,26 @@
-// Prepare ESM or CJS module for Strategy
-// Add .d.ts typings
-// Add tests and cases
+type TBehaviour = Record<string, (...args: any[]) => void>;
 
 class Strategy {
-  #strategyName: string = '';
+  #strategyName = '';
   #actions: string[] = [];
-  #behaviors: Map<string, Record<string, (...args: any[]) => void>> = new Map();
+  #behaviors = new Map<string, TBehaviour>();
 
   constructor(strategyName: string, actions: string[]) {
     this.#strategyName = strategyName;
     this.#actions = actions;
   }
 
-  registerBehaviour(
-    implementationName: string,
-    behaviour: Record<string, (...args: any[]) => void>,
-  ) {
+  registerBehaviour(implementationName: string, behaviour: TBehaviour) {
+    const missedBehaviours = this.#actions.filter(action => !behaviour[action]);
+    if (missedBehaviours.length > 0) {
+      throw new Error(
+        `Strategy "${this.#strategyName}": Implementation "${implementationName}" has missed behaviours for "${missedBehaviours.join(', ')}"`,
+      );
+    }
+
     const unregisteredActions = Object.keys(behaviour).filter(
       action => !this.#actions.includes(action),
     );
-
     if (unregisteredActions.length > 0) {
       console.warn(
         `Strategy "${this.#strategyName}": Behaviour "${implementationName}" has unregistered actions "${unregisteredActions.join(', ')}"`,
@@ -47,7 +48,6 @@ class Strategy {
 module.exports = Strategy;
 
 // Usage
-/*
 const notifyStrategy = new Strategy('notification', ['notify', 'multicast']);
 
 notifyStrategy.registerBehaviour('email', {
@@ -83,4 +83,3 @@ emailNotify('test@test.com', 'Email: notify');
 
 const emailMulticast = notifyStrategy.getBehaviour('email', 'multicast');
 emailMulticast('Email: multicast');
-*/

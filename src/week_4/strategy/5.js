@@ -2,10 +2,16 @@ const createStrategy = (strategyName, actions) => {
   const behaviors = new Map();
 
   const registerBehaviour = (implementationName, behaviour) => {
+    const missedBehaviours = actions.filter(action => !behaviour[action]);
+    if (missedBehaviours.length > 0) {
+      throw new Error(
+        `Strategy "${strategyName}": Implementation "${implementationName}" has missed behaviours for "${missedBehaviours.join(', ')}"`,
+      );
+    }
+
     const unregisteredActions = Object.keys(behaviour).filter(
       action => !actions.includes(action),
     );
-
     if (unregisteredActions.length > 0) {
       console.warn(
         `Strategy "${strategyName}": Behaviour "${implementationName}" has unregistered actions "${unregisteredActions.join(', ')}"`,
@@ -33,33 +39,33 @@ const createStrategy = (strategyName, actions) => {
 
 module.exports = createStrategy;
 // Usage
-// const notifyStrategy = createStrategy('notification', ['notify', 'multicast']);
-// notifyStrategy.registerBehaviour('email', {
-//   notify: (to, message) => {
-//     console.log(`Sending "email" notification to <${to}>`);
-//     console.log(`Message length: ${message.length}`);
-//   },
-//   multicast: message => {
-//     console.log(`Sending "email" notification to all`);
-//     console.log(`Message length: ${message.length}`);
-//   },
-// });
-// const emailNotify = notifyStrategy.getBehaviour('email', 'notify');
-// emailNotify('test@test.com', 'Email: notify');
-// const emailMulticast = notifyStrategy.getBehaviour('email', 'multicast');
-// emailMulticast('Email: multicast');
+const notifyStrategy = createStrategy('notification', ['notify', 'multicast']);
+notifyStrategy.registerBehaviour('email', {
+  notify: (to, message) => {
+    console.log(`Sending "email" notification to <${to}>`);
+    console.log(`Message length: ${message.length}`);
+  },
+  multicast: message => {
+    console.log(`Sending "email" notification to all`);
+    console.log(`Message length: ${message.length}`);
+  },
+});
+const emailNotify = notifyStrategy.getBehaviour('email', 'notify');
+emailNotify('test@test.com', 'Email: notify');
+const emailMulticast = notifyStrategy.getBehaviour('email', 'multicast');
+emailMulticast('Email: multicast');
 
-// notifyStrategy.registerBehaviour('sms', {
-//   notify: (to, message) => {
-//     console.log(`Sending "sms" notification to <${to}>`);
-//     console.log(`Message length: ${message.length}`);
-//   },
-//   multicast: message => {
-//     console.log(`Sending "sms" notification to all`);
-//     console.log(`Message length: ${message.length}`);
-//   },
-// });
-// const smsNotify = notifyStrategy.getBehaviour('sms', 'notify');
-// smsNotify('+380501234567', 'SMS: notify');
-// const smsMulticast = notifyStrategy.getBehaviour('sms', 'multicast');
-// smsMulticast('SMS: multicast');
+notifyStrategy.registerBehaviour('sms', {
+  notify: (to, message) => {
+    console.log(`Sending "sms" notification to <${to}>`);
+    console.log(`Message length: ${message.length}`);
+  },
+  multicast: message => {
+    console.log(`Sending "sms" notification to all`);
+    console.log(`Message length: ${message.length}`);
+  },
+});
+const smsNotify = notifyStrategy.getBehaviour('sms', 'notify');
+smsNotify('+380501234567', 'SMS: notify');
+const smsMulticast = notifyStrategy.getBehaviour('sms', 'multicast');
+smsMulticast('SMS: multicast');

@@ -6,15 +6,19 @@ const path = require('node:path');
     fn =>
     (...args) => {
       const promise = new Promise((resolve, reject) => {
-        const options = args.pop();
-        if ('timeout' in options) {
-          setTimeout(() => {
-            reject(new Error('Time out !!!'));
-          }, options.timeout);
-        }
+        const timeout = args.pop();
+        const state = { isRejected: false, timeoutId: null };
+        state.timeoutId = setTimeout(() => {
+          state.isRejected = true;
+          reject(new Error('Time out'));
+        }, timeout);
 
         const callback = (err, data) => {
-          resolve(data);
+          if (!state.isRejected) {
+            clearTimeout(state.timeoutId);
+            if (err) reject(err);
+            else resolve(data);
+          }
         };
         fn(...args, callback);
       });
@@ -27,9 +31,7 @@ const path = require('node:path');
 
   const main = async () => {
     const fileName = './1.js';
-    const data = await read(path.join(__dirname, fileName), 'utf8', {
-      timeout: 5000,
-    });
+    const data = await read(path.join(__dirname, fileName), 'utf8', 2000);
     console.log(`File "${fileName}" size: ${data.length}`);
   };
 
