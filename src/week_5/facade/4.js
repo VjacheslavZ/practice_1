@@ -2,8 +2,20 @@
 const { memoryUsage } = require('node:process');
 
 {
-  const timeoutCollection = interval => {
+  const timeoutCollection = (
+    interval,
+    deleteExpiredInterval = interval * 10,
+  ) => {
     const collection = new Map();
+
+    const deleteExpired = () => {
+      const now = Date.now();
+      for (const [key, { expireDate }] of collection.entries()) {
+        if (expireDate < now) collection.delete(key);
+      }
+    };
+
+    setInterval(deleteExpired, deleteExpiredInterval);
 
     return {
       set(key, value) {
@@ -13,10 +25,10 @@ const { memoryUsage } = require('node:process');
       get(key) {
         const data = collection.get(key);
         if (data && data.expireDate < Date.now()) {
-          collection.delete(key);
+          collection.delete(key); // Do we need to delete the key here? single responsibility principle
           return undefined;
         }
-        return data;
+        return data.value;
       },
       delete(key) {
         collection.delete(key);
@@ -24,18 +36,15 @@ const { memoryUsage } = require('node:process');
       toArray() {
         const now = Date.now();
         const result = [];
-        for (const [key, { expireDate }] of collection.entries()) {
-          if (expireDate < now) {
-            collection.delete(key);
-          } else {
-            result.push([key, collection.get(key).value]);
-          }
+        for (const [key, { expireDate, value }] of collection.entries()) {
+          if (expireDate < now)
+            collection.delete(key); // Do we need to delete the key here? single responsibility principle
+          else result.push([key, value]);
         }
         return result;
       },
     };
   };
-
   const hash = timeoutCollection(1000);
   /* 
     for (let i = 0; i < 10000000; i++) {
@@ -63,7 +72,13 @@ const { memoryUsage } = require('node:process');
 
     setTimeout(() => {
       hash.set('quattro', 4);
+      const q = hash.get('quattro');
+      console.dir({ q });
       console.dir({ array: hash.toArray() });
     }, 500);
   }, 1500);
+
+  setTimeout(() => {
+    console.dir({ array: hash.toArray() });
+  }, 1000 * 15);
 }

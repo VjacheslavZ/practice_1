@@ -4,31 +4,28 @@
 // Currently, only the last block (of 3) works. Fix this issue so that
 // all blocks can iterate concurrently using a single `Timer` instance.
 
-class ResolversIterator {
+class Timer {
+  #counter = 0;
   #resolvers = [];
 
-  resolveAll(value) {
-    const resolvers = this.#resolvers.splice(0);
+  constructor(delay) {
+    setInterval(() => {
+      this.#counter++;
+      this.#resolveAll(this.#counter);
+    }, delay);
+  }
+
+  #resolveAll(value) {
+    const resolvers = this.#resolvers;
     for (let i = 0; i < resolvers.length; i++) {
       resolvers[i]({ value, done: false });
     }
+    this.#resolvers.length = 0;
   }
 
   [Symbol.asyncIterator]() {
     const next = () => new Promise(resolve => this.#resolvers.push(resolve));
     return { next };
-  }
-}
-
-class Timer extends ResolversIterator {
-  #counter = 0;
-
-  constructor(delay) {
-    super();
-    setInterval(() => {
-      this.#counter++;
-      this.resolveAll(this.#counter);
-    }, delay);
   }
 }
 

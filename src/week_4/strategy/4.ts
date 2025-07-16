@@ -73,13 +73,13 @@ notifyStrategy.registerBehaviour('sms', {
 });
 
 const smsNotify = notifyStrategy.getBehaviour('sms', 'notify');
-smsNotify('+380501234567', 'SMS: notify');
+// smsNotify('+380501234567', 'SMS: notify');
 
 const smsMulticast = notifyStrategy.getBehaviour('sms', 'multicast');
-smsMulticast('SMS: multicast');
+// smsMulticast('SMS: multicast');
 
 const emailNotify = notifyStrategy.getBehaviour('email', 'notify');
-emailNotify('test@test.com', 'Email: notify');
+// emailNotify('test@test.com', 'Email: notify');
 
 const emailMulticast = notifyStrategy.getBehaviour('email', 'multicast');
-emailMulticast('Email: multicast');
+// emailMulticast('Email: multicast');

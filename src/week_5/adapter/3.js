@@ -4,23 +4,25 @@
 // (e.g., 'step' in the example) and not hardcoded into the `Timer`.
 // Hint: You need Node.js >= v19.0.0
 
-class Timer extends EventTarget {
-  #counter = 0;
+{
+  class Timer extends EventTarget {
+    #counter = 0;
 
-  constructor(eventName, delay) {
-    super();
-    setInterval(() => {
-      const step = this.#counter++;
-      const data = { detail: { step } };
-      const event = new CustomEvent(eventName, data);
-      this.dispatchEvent(event);
-    }, delay);
+    constructor(eventName, delay) {
+      super();
+      setInterval(() => {
+        const step = this.#counter++;
+        const data = { detail: { step } };
+        const event = new CustomEvent(eventName, data);
+        this.dispatchEvent(event);
+      }, delay);
+    }
   }
+
+  // Usage
+  const timer = new Timer('step', 1000);
+
+  timer.addEventListener('step', event => {
+    console.log({ event, detail: event.detail });
+  });
 }
-
-// Usage
-const timer = new Timer('step', 1000);
-
-timer.addEventListener('step', event => {
-  console.log({ event, detail: event.detail });
-});

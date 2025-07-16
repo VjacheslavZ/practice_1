@@ -1,8 +1,8 @@
 'use strict';
 // Make implementation from 2-class.js compatible with Map interface and prepare .d.ts
-class TimeoutCollection {
+class TimeoutCollection<T> {
   timeout: number;
-  collection: Map<string, any>;
+  collection: Map<string, T>;
   timers: Map<string, NodeJS.Timeout>;
 
   constructor(timeout: number) {
@@ -11,7 +11,7 @@ class TimeoutCollection {
     this.timers = new Map();
   }
 
-  set(key: any, value: any): void {
+  set(key: string, value: T): void {
     const timer = this.timers.get(key);
     if (timer) clearTimeout(timer);
     const timeout = setTimeout(() => {
@@ -22,7 +22,7 @@ class TimeoutCollection {
     this.timers.set(key, timeout);
   }
 
-  get(key: string): unknown {
+  get(key: string): T | undefined {
     return this.collection.get(key);
   }
 
@@ -47,11 +47,7 @@ class TimeoutCollection {
   }
 
   forEach(
-    callback: (
-      value: unknown,
-      key: string,
-      collection: Map<string, unknown>,
-    ) => void,
+    callback: (value: T, key: string, collection: Map<string, T>) => void,
   ): void {
     this.collection.forEach(callback);
   }
@@ -60,19 +56,19 @@ class TimeoutCollection {
     return this.collection.keys();
   }
 
-  values(): MapIterator<unknown> {
+  values(): MapIterator<T> {
     return this.collection.values();
   }
 
-  entries(): MapIterator<[string, unknown]> {
+  entries(): MapIterator<[string, T]> {
     return this.collection.entries();
   }
 
-  toArray(): [string, unknown][] {
+  toArray(): [string, T][] {
     return [...this.collection.entries()];
   }
 
-  [Symbol.iterator](): Iterator<[string, unknown]> {
+  [Symbol.iterator](): Iterator<[string, T]> {
     return this.collection[Symbol.iterator]();
   }
 }

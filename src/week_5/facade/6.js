@@ -39,7 +39,7 @@ Logger.COLORS = {
 };
 
 class Task extends EventEmitter {
-  constructor(name, time, exec) {
+  constructor(name, exec) {
     super();
     this.name = name;
     this.exec = exec;
@@ -86,32 +86,20 @@ class Task extends EventEmitter {
 
 class IntervalTask extends Task {
   constructor(name, time, exec) {
-    super(name, time, exec);
-    this.name = name;
+    super(name, exec);
 
     this.time = Date.now() + time;
     this.set = setInterval;
     this.clear = clearInterval;
-
-    this.exec = exec;
-    this.running = false;
-    this.count = 0;
-    this.timer = null;
   }
 }
 class TimeoutTask extends Task {
   constructor(name, time, exec) {
-    super();
-    this.name = name;
+    super(name, exec);
 
     this.time = new Date(time).getTime();
     this.set = setTimeout;
     this.clear = clearTimeout;
-
-    this.exec = exec;
-    this.running = false;
-    this.count = 0;
-    this.timer = null;
   }
 }
 
@@ -123,8 +111,6 @@ class Scheduler extends EventEmitter {
   }
 
   task(name, time, exec) {
-    this.stop(name);
-
     const task =
       typeof time === 'number'
         ? new IntervalTask(name, time, exec)
@@ -161,7 +147,6 @@ class Scheduler extends EventEmitter {
 }
 
 // Usage
-
 const scheduler = new Scheduler({ options: { output: Console } });
 
 scheduler.on('error', (err, task) => {

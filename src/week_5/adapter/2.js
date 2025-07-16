@@ -13,6 +13,7 @@ const promisify =
       const signal = args.pop();
 
       const onAbort = () => reject(new Error('Aborted'));
+      if (signal.aborted) onAbort();
       signal.addEventListener('abort', onAbort, { once: true });
 
       const callback = (err, data) => {
@@ -33,8 +34,13 @@ const read = promisify(fs.readFile);
 const ac = new AbortController();
 const main = async () => {
   const fileName = '2.js';
+
+  setTimeout(() => {
+    ac.abort();
+  }, 1000);
+
   const data = await read(path.join(__dirname, fileName), 'utf8', ac.signal);
-  // ac.abort();
+
   console.log(`File "${fileName}" size: ${data.length}`);
 };
 
