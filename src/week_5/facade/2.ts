@@ -1,9 +1,9 @@
 'use strict';
 // Make implementation from 2-class.js compatible with Map interface and prepare .d.ts
-class TimeoutCollection<T> {
+class TimeoutCollection<K, V> {
   timeout: number;
-  collection: Map<string, T>;
-  timers: Map<string, NodeJS.Timeout>;
+  collection: Map<K, V>;
+  timers: Map<K, NodeJS.Timeout>;
 
   constructor(timeout: number) {
     this.timeout = timeout;
@@ -11,7 +11,7 @@ class TimeoutCollection<T> {
     this.timers = new Map();
   }
 
-  set(key: string, value: T): void {
+  set(key: K, value: V): void {
     const timer = this.timers.get(key);
     if (timer) clearTimeout(timer);
     const timeout = setTimeout(() => {
@@ -22,11 +22,11 @@ class TimeoutCollection<T> {
     this.timers.set(key, timeout);
   }
 
-  get(key: string): T | undefined {
+  get(key: K): V | undefined {
     return this.collection.get(key);
   }
 
-  delete(key: string): boolean {
+  delete(key: K): boolean {
     const timer = this.timers.get(key);
     if (timer) clearTimeout(timer);
     this.timers.delete(key);
@@ -34,7 +34,7 @@ class TimeoutCollection<T> {
     return isDeleted;
   }
 
-  has(key: string): boolean {
+  has(key: K): boolean {
     return this.collection.has(key);
   }
 
@@ -46,29 +46,27 @@ class TimeoutCollection<T> {
     }
   }
 
-  forEach(
-    callback: (value: T, key: string, collection: Map<string, T>) => void,
-  ): void {
+  forEach(callback: (value: V, key: K, collection: Map<K, V>) => void): void {
     this.collection.forEach(callback);
   }
 
-  keys(): MapIterator<string> {
+  keys(): MapIterator<K> {
     return this.collection.keys();
   }
 
-  values(): MapIterator<T> {
+  values(): MapIterator<V> {
     return this.collection.values();
   }
 
-  entries(): MapIterator<[string, T]> {
+  entries(): MapIterator<[K, V]> {
     return this.collection.entries();
   }
 
-  toArray(): [string, T][] {
+  toArray(): [K, V][] {
     return [...this.collection.entries()];
   }
 
-  [Symbol.iterator](): Iterator<[string, T]> {
+  [Symbol.iterator](): Iterator<[K, V]> {
     return this.collection[Symbol.iterator]();
   }
 }
@@ -98,13 +96,11 @@ console.log('delete', hash.delete('uno'));
 const iterator = hash[Symbol.iterator]();
 console.log('Iterator', iterator.next());
 
-hash.forEach(
-  (value: unknown, key: string, collection: Map<string, unknown>) => {
-    console.log('forEach');
-    console.log(value, key);
-    console.log('collection', collection);
-  },
-);
+hash.forEach((value, key, collection) => {
+  console.log('forEach');
+  console.log(value, key);
+  console.log('collection', collection);
+});
 
 setTimeout(() => {
   hash.set('tre', 3);

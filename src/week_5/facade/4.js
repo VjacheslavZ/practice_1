@@ -25,7 +25,7 @@ const { memoryUsage } = require('node:process');
       get(key) {
         const data = collection.get(key);
         if (data && data.expireDate < Date.now()) {
-          collection.delete(key); // Do we need to delete the key here? single responsibility principle
+          collection.delete(key);
           return undefined;
         }
         return data.value;
@@ -37,8 +37,7 @@ const { memoryUsage } = require('node:process');
         const now = Date.now();
         const result = [];
         for (const [key, { expireDate, value }] of collection.entries()) {
-          if (expireDate < now)
-            collection.delete(key); // Do we need to delete the key here? single responsibility principle
+          if (expireDate < now) collection.delete(key);
           else result.push([key, value]);
         }
         return result;

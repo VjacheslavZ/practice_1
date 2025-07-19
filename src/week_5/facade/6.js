@@ -41,6 +41,11 @@ Logger.COLORS = {
 class Task extends EventEmitter {
   constructor(name, exec) {
     super();
+
+    if (this.constructor === Task) {
+      throw new Error('Task class cannot be instantiated directly');
+    }
+
     this.name = name;
     this.exec = exec;
     this.running = false;
